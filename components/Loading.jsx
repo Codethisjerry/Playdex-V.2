@@ -1,70 +1,88 @@
 'use client'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { useRef } from 'react'
-import { usePathname } from 'next/navigation' // replaces useLocation
 
-const Stairs = ({ children }) => {
-  const currentPath = usePathname() // current route in Next.js
+import { useEffect, useRef } from 'react'
+import { gsap } from 'gsap'
 
-  const stairParentRef = useRef(null)
-  const pageRef = useRef(null)
+/**
+ * Simple, Non-Disruptive Preloader
+ * Clean preloader that doesn't interfere with website functionality
+ */
+const Loading = () => {
+  const containerRef = useRef(null)
+  const shapeRef = useRef(null)
+  const textRef = useRef(null)
 
-  useGSAP(
-    () => {
-      const tl = gsap.timeline()
+  useEffect(() => {
+    if (!containerRef.current || !shapeRef.current || !textRef.current) return
 
-      tl.to(stairParentRef.current, {
-        display: 'block',
-      })
-      tl.from('.stair', {
-        height: 0,
-        stagger: {
-          amount: -0.2,
-        },
-      })
-      tl.to('.stair', {
-        y: '100%',
-        stagger: {
-          amount: -0.25,
-        },
-      })
-      tl.to(stairParentRef.current, {
-        display: 'none',
-      })
-      tl.to('.stair', {
-        y: '0%',
-      })
+    // Create animation timeline
+    const tl = gsap.timeline()
 
-      gsap.from(pageRef.current, {
-        opacity: 0,
-        delay: 1.3,
-        scale: 1.2,
-      })
-    },
-    [currentPath] // re-run animation when path changes
-  )
+    // Initial state - everything hidden
+    gsap.set([shapeRef.current, textRef.current], {
+      opacity: 0,
+      scale: 0.8
+    })
+
+    // Animate shape reveal
+    tl.to(shapeRef.current, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.8,
+      ease: "power2.out"
+    })
+    // Animate text reveal
+    .to(textRef.current, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.6,
+      ease: "power2.out"
+    }, "-=0.4")
+    // Hold for a moment
+    .to({}, { duration: 1 })
+    // Fade out entire preloader
+    .to(containerRef.current, {
+      opacity: 0,
+      duration: 0.5,
+      ease: "power2.out",
+      onComplete: () => {
+        if (containerRef.current) {
+          containerRef.current.style.display = 'none'
+        }
+      }
+    })
+
+    // Cleanup function
+    return () => {
+      tl.kill()
+    }
+  }, [])
 
   return (
-    <div>
-      {/* overlay stairs */}
-      <div
-        ref={stairParentRef}
-        className="h-screen w-full fixed z-20 top-0"
-      >
-        <div className="h-full w-full flex">
-          <div className="stair h-full w-1/5 bg-white"></div>
-          <div className="stair h-full w-1/5 bg-white"></div>
-          <div className="stair h-full w-1/5 bg-white"></div>
-          <div className="stair h-full w-1/5 bg-white"></div>
-          <div className="stair h-full w-1/5 bg-white"></div>
+    <div 
+      ref={containerRef}
+      className="fixed inset-0 bg-black z-50 flex items-center justify-center"
+      aria-label="Loading PlayDex"
+    >
+      {/* Simple Geometric Shape */}
+      <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48">
+        <div 
+          ref={shapeRef}
+          className="absolute inset-0 bg-white rounded-lg"
+        />
+        
+        {/* Loading Text */}
+        <div 
+          ref={textRef}
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black tracking-wider">
+            PlayDex
+          </h1>
         </div>
       </div>
-
-      {/* actual page content */}
-      <div ref={pageRef}>{children}</div> 
     </div>
   )
 }
 
-export default Stairs
+export default Loading
