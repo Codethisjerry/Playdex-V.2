@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect, lazy, Suspense } from 'react'
+import { lazy, Suspense } from 'react'
 
 // Critical components (loaded immediately)
-import StairsPreloader from '../components/StairsPreloader'
+import Stairs from '../components/Stairs'
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 
@@ -16,10 +16,10 @@ const Footer = lazy(() => import('../components/Footer'))
 
 /**
  * Main Home Page Component
- * Renders the complete PlayDex landing page with simple preloader
+ * Renders the complete PlayDex landing page with stairs animation
  * 
  * Features:
- * - Simple, non-disruptive preloader
+ * - Stairs reveal animation that wraps entire page content
  * - Responsive navigation with floating design
  * - Hero section with animated background lines and spotlight
  * - Features section with glassmorphism cards
@@ -30,21 +30,8 @@ const Footer = lazy(() => import('../components/Footer'))
  * - Footer with navigation and social links
  */
 export default function Home() {
-  // Loading state for better user experience
-  const [isLoading, setIsLoading] = useState(true)
-
-  // Handle preloader completion
-  const handlePreloaderComplete = () => {
-    setIsLoading(false)
-  }
-
-  // Show loading screen while content loads
-  if (isLoading) {
-    return <StairsPreloader onComplete={handlePreloaderComplete} />
-  }
-
   return (
-    <>
+    <Stairs>
       {/* Navigation Bar */}
       <Navbar />
       
@@ -74,6 +61,6 @@ export default function Home() {
           <Footer />
         </Suspense>
       </main>
-    </>
+    </Stairs>
   )
 }
