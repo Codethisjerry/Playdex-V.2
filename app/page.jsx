@@ -1,52 +1,84 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 
-// Component imports
+// Critical components (loaded immediately)
 import Loading from '../components/Loading'
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
-import Features from '../components/Features'
-import Gamification from '../components/Gamification'
-import FAQ from '../components/FAQ'
-import CTA from '../components/CTA'
-import Footer from '../components/Footer'
-import TargetCursor from '../components/TargetCursor'
+
+// Lazy load non-critical components
+const Features = lazy(() => import('../components/Features'))
+const HowToUse = lazy(() => import('../components/HowToUse'))
+const Gamification = lazy(() => import('../components/Gamification'))
+const FAQ = lazy(() => import('../components/FAQ'))
+const Footer = lazy(() => import('../components/Footer'))
 
 /**
  * Main Home Page Component
  * Renders the complete PlayDex landing page with loading state
+ * 
+ * Features:
+ * - Loading screen with animated spinner
+ * - Custom target cursor for interactive elements
+ * - Responsive navigation with floating design
+ * - Hero section with animated background lines and spotlight
+ * - Features section with glassmorphism cards
+ * - How-to-use section with step-by-step process
+ * - Gamification section with stats and leaderboard
+ * - FAQ section with accordion-style questions
+ * - Call-to-action section
+ * - Footer with navigation and social links
  */
 export default function Home() {
+  // Loading state for better user experience
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     // Simulate loading time for better UX
     const timer = setTimeout(() => {
       setIsLoading(false)
-    }, 2000)
+    }, 3500) // Match preloader animation timing
 
     return () => clearTimeout(timer)
   }, [])
 
+  // Show loading screen while content loads
   if (isLoading) {
     return <Loading />
   }
 
   return (
-    <main className="min-h-screen bg-black">
-      <TargetCursor 
-        targetSelector="button"
-        spinDuration={4}
-        hideDefaultCursor={true}
-      />
+    <>
+      {/* Navigation Bar */}
       <Navbar />
-      <Hero />
-      <Features />
-      <Gamification />
-      <FAQ />
-      <CTA />
-      <Footer />
-    </main>
+      
+      {/* Main Content */}
+      <main className="relative">
+        {/* Hero Section with Background Lines and Spotlight */}
+        <Hero />
+        
+        {/* Lazy-loaded sections with loading fallbacks */}
+        <Suspense fallback={<div className="h-32 bg-black animate-pulse" />}>
+          <Features />
+        </Suspense>
+        
+        <Suspense fallback={<div className="h-32 bg-black animate-pulse" />}>
+          <HowToUse />
+        </Suspense>
+        
+        <Suspense fallback={<div className="h-32 bg-black animate-pulse" />}>
+          <Gamification />
+        </Suspense>
+        
+        <Suspense fallback={<div className="h-32 bg-black animate-pulse" />}>
+          <FAQ />
+        </Suspense>
+        
+        <Suspense fallback={<div className="h-32 bg-black animate-pulse" />}>
+          <Footer />
+        </Suspense>
+      </main>
+    </>
   )
 }

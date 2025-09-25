@@ -1,64 +1,80 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 
+/**
+ * Stepped Geometric Preloader
+ * Creates stepped geometric pattern with white and black sections
+ * Features: Stepped shapes, smooth reveal animations, and hero page transition
+ */
 const Loading = () => {
-  const [isLoading, setIsLoading] = useState(true)
+  const containerRef = useRef(null)
+  const whiteShapeRef = useRef(null)
+  const textRef = useRef(null)
 
   useEffect(() => {
-    // Simple loading animation
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 2000) // 2 seconds loading
+    // Optimized animation timeline
+    const tl = gsap.timeline()
 
-    return () => clearTimeout(timer)
+    // Set initial states
+    gsap.set([whiteShapeRef.current, textRef.current], { 
+      scaleX: 0,
+      opacity: 0, 
+      y: 20,
+      transformOrigin: "left center"
+    })
+
+    // Simplified animation sequence
+    tl.to(whiteShapeRef.current, {
+      scaleX: 1,
+      duration: 1.2,
+      ease: "power2.out"
+    })
+    .to(textRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power2.out"
+    }, "-=0.3")
+    .to(containerRef.current, {
+      opacity: 0,
+      duration: 0.4,
+      ease: "power2.out",
+      onComplete: () => {
+        if (containerRef.current) {
+          containerRef.current.style.display = 'none'
+        }
+      }
+    }, 2.2)
+
+    return () => tl.kill()
   }, [])
 
-  useEffect(() => {
-    if (isLoading) {
-      // GSAP loading animation
-      gsap.fromTo('.loading-spinner', 
-        { rotation: 0 },
-        { 
-          rotation: 360,
-          duration: 1,
-          repeat: -1,
-          ease: "none"
-        }
-      )
-      
-      gsap.fromTo('.loading-text',
-        { opacity: 0, y: 20 },
-        { 
-          opacity: 1, 
-          y: 0,
-          duration: 0.8,
-          delay: 0.3
-        }
-      )
-    }
-  }, [isLoading])
-
-  if (!isLoading) return null
-
   return (
-    <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
-      <div className="text-center">
-        {/* Spinner */}
-        <div className="loading-spinner w-16 h-16 border-4 border-white/20 border-t-white rounded-full mx-auto mb-6"></div>
-        
-        {/* Loading Text */}
-        <div className="loading-text">
-          <h2 className="text-2xl font-bold text-white mb-2">PlayDex</h2>
-          <p className="text-gray-400">Level Up Your Learning</p>
-        </div>
-        
-        {/* Progress Bar */}
-        <div className="w-48 h-1 bg-white/20 rounded-full mx-auto mt-6 overflow-hidden">
-          <div className="h-full bg-white rounded-full animate-pulse"></div>
+    <div 
+      ref={containerRef}
+      className="fixed inset-0 bg-black z-50 flex items-center justify-center overflow-hidden"
+    >
+      {/* White Stepped Shape - Full Width to Remove Black Bar */}
+      <div 
+        ref={whiteShapeRef}
+        className="absolute left-0 bottom-0 h-full w-full bg-white"
+        style={{
+          clipPath: 'polygon(0% 0%, 0% 100%, 20% 100%, 30% 80%, 40% 100%, 50% 80%, 60% 100%, 70% 80%, 80% 100%, 90% 80%, 100% 100%, 100% 0%)'
+        }}
+      />
+
+      {/* Main Content - Responsive */}
+      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8">
+        {/* Loading Text - Responsive Sizing */}
+        <div ref={textRef} className="opacity-0">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-black mb-2 tracking-wider">
+            Gamify Learning
+          </h1>
         </div>
       </div>
+
     </div>
   )
 }
