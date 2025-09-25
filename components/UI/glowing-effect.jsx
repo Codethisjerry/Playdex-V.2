@@ -1,7 +1,8 @@
 "use client";
 import { memo, useCallback, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { animate } from "framer-motion";
+import { motion } from "framer-motion";
+import { gsap } from "gsap";
 
 const GlowingEffect = memo(({
   blur = 0,
@@ -67,12 +68,15 @@ const GlowingEffect = memo(({
       const angleDiff = ((targetAngle - currentAngle + 180) % 360) - 180;
       const newAngle = currentAngle + angleDiff;
 
-      animate(currentAngle, newAngle, {
+      // Use GSAP for smooth animation instead of framer-motion animate
+      const tl = gsap.timeline();
+      tl.to({ value: currentAngle }, {
+        value: newAngle,
         duration: movementDuration,
-        ease: [0.16, 1, 0.3, 1],
-        onUpdate: (value) => {
-          element.style.setProperty("--start", String(value));
-        },
+        ease: "power2.out",
+        onUpdate: function() {
+          element.style.setProperty("--start", String(this.targets()[0].value));
+        }
       });
     });
   }, [inactiveZone, proximity, movementDuration]);
