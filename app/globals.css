@@ -136,6 +136,13 @@ body {
   transition: all 0.3s ease;
 }
 
+/* ===== STAIRS ANIMATION OPTIMIZATIONS ===== */
+.stair {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
 /* ===== EPIC PRELOADER ANIMATIONS ===== */
 @keyframes morphing-shape {
   0% {
