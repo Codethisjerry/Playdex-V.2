@@ -21,9 +21,12 @@ export const metadata = {
   keywords: 'learning, gamification, courses, YouTube, education, progress tracking, certificates',
   authors: [{ name: 'PlayDex Team' }],
   icons: {
-    icon: '/images/favicon.ico',
-    shortcut: '/images/favicon.ico',
-    apple: '/images/favicon.ico',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/images/PlayDex.png', type: 'image/png' }
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/images/PlayDex.png',
   },
   openGraph: {
     title: 'PlayDex — Level Up Your Learning',
@@ -68,9 +71,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         {/* Favicon Configuration */}
-        <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
-        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
-        <link rel="apple-touch-icon" href="/images/favicon.ico" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="/images/PlayDex.png" />
+        <link rel="icon" href="/images/PlayDex.png" type="image/png" />
         <meta name="theme-color" content="#000000" />
       </head>
       <body className="bg-black text-white antialiased">
