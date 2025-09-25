@@ -3,7 +3,7 @@
 import { useState, useEffect, lazy, Suspense } from 'react'
 
 // Critical components (loaded immediately)
-import Loading from '../components/Loading'
+import StairsPreloader from '../components/StairsPreloader'
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 
@@ -33,18 +33,14 @@ export default function Home() {
   // Loading state for better user experience
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    // Simulate loading time for better UX
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 2500) // Shorter loading time
-
-    return () => clearTimeout(timer)
-  }, [])
+  // Handle preloader completion
+  const handlePreloaderComplete = () => {
+    setIsLoading(false)
+  }
 
   // Show loading screen while content loads
   if (isLoading) {
-    return <Loading />
+    return <StairsPreloader onComplete={handlePreloaderComplete} />
   }
 
   return (
