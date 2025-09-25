@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { gsap } from 'gsap'
 import { Github, MessageCircle, Linkedin, Mail, Twitter, ArrowUp, Heart, Star, Zap } from 'lucide-react'
+import Image from 'next/image'
 
 /**
  * Footer Component
@@ -106,9 +107,14 @@ const Footer = () => {
             <div className="text-center lg:text-left lg:flex-1">
               {/* Logo and Brand */}
               <div className="flex items-center justify-center lg:justify-start gap-3 mb-6">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                  <span className="text-black font-bold text-lg">P</span>
-                </div>
+                <Image 
+                  src="/images/PlayDex.png" 
+                  alt="PlayDex Logo" 
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 object-cover rounded-lg hover:scale-110 transition-transform duration-300"
+                  priority
+                />
                 <h3 className="text-3xl font-bold text-white">
                   PlayDex
                 </h3>
