@@ -22,49 +22,37 @@ const Stairs = ({ children }) => {
       // Set initial states
       gsap.set(stairParentRef.current, { display: 'block' })
       gsap.set('.stair', { height: 0, y: 0 })
-      gsap.set(pageRef.current, { opacity: 0, scale: 1.1 })
+      gsap.set(pageRef.current, { opacity: 0 })
 
-      const tl = gsap.timeline({
-        defaults: { ease: "power3.out" }
-      })
+      const tl = gsap.timeline()
 
-      // Grow stairs from 0 height with smooth stagger
+      // Grow stairs from 0 height with consistent stagger
       tl.to('.stair', {
         height: '100%',
-        duration: 1.2,
-        stagger: {
-          amount: -0.3,
-          from: "start"
-        },
-        ease: "power3.out"
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power2.out"
       })
-      // Slide stairs down to reveal content with smooth motion
+      // Slide stairs down to reveal content
       tl.to('.stair', {
         y: '100%',
-        duration: 1.0,
-        stagger: {
-          amount: -0.4,
-          from: "start"
-        },
-        ease: "power3.inOut"
-      }, "-=0.2")
-      // Animate page content entrance with smooth fade
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power2.inOut"
+      })
+      // Animate page content entrance
       tl.to(pageRef.current, {
         opacity: 1,
-        scale: 1,
-        duration: 1.0,
-        ease: "power3.out"
-      }, "-=0.6")
-      // Hide stairs overlay after content is visible
+        duration: 0.4,
+        ease: "power2.out"
+      }, "-=0.3")
+      // Hide stairs overlay
       tl.to(stairParentRef.current, {
         display: 'none',
         duration: 0.1
       })
-      // Reset stairs position for next animation
-      tl.to('.stair', {
-        y: '0%',
-        duration: 0.1
-      })
+      // Reset stairs position
+      tl.set('.stair', { y: '0%' })
     },
     [currentPath] // re-run animation when path changes
   )
@@ -78,11 +66,11 @@ const Stairs = ({ children }) => {
         style={{ display: 'none' }}
       >
         <div className="h-full w-full flex">
-          <div className="stair h-0 w-1/5 bg-white transform-gpu will-change-transform"></div>
-          <div className="stair h-0 w-1/5 bg-white transform-gpu will-change-transform"></div>
-          <div className="stair h-0 w-1/5 bg-white transform-gpu will-change-transform"></div>
-          <div className="stair h-0 w-1/5 bg-white transform-gpu will-change-transform"></div>
-          <div className="stair h-0 w-1/5 bg-white transform-gpu will-change-transform"></div>
+          <div className="stair h-0 w-1/5 bg-white"></div>
+          <div className="stair h-0 w-1/5 bg-white"></div>
+          <div className="stair h-0 w-1/5 bg-white"></div>
+          <div className="stair h-0 w-1/5 bg-white"></div>
+          <div className="stair h-0 w-1/5 bg-white"></div>
         </div>
       </div>
 
