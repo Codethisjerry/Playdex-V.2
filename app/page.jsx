@@ -3,7 +3,6 @@
 import { lazy, Suspense } from 'react'
 
 // Critical components (loaded immediately)
-import Stairs from '../components/Stairs'
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 
@@ -16,10 +15,10 @@ const Footer = lazy(() => import('../components/Footer'))
 
 /**
  * Main Home Page Component
- * Renders the complete PlayDex landing page with stairs animation
+ * Renders the complete PlayDex landing page without preloader
  * 
  * Features:
- * - Stairs reveal animation that wraps entire page content
+ * - Direct page load without any preloader animations
  * - Responsive navigation with floating design
  * - Hero section with animated background lines and spotlight
  * - Features section with glassmorphism cards
@@ -31,7 +30,7 @@ const Footer = lazy(() => import('../components/Footer'))
  */
 export default function Home() {
   return (
-    <Stairs>
+    <>
       {/* Navigation Bar */}
       <Navbar />
       
@@ -61,6 +60,6 @@ export default function Home() {
           <Footer />
         </Suspense>
       </main>
-    </Stairs>
+    </>
   )
 }
