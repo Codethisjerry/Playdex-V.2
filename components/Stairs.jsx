@@ -1,81 +1,82 @@
 'use client'
 
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { useRef } from 'react'
-import { usePathname } from 'next/navigation' // replaces useLocation
+import { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 
 /**
- * Stairs Animation Component
- * Creates a smooth stairs reveal animation that wraps page content
- * Features: 5 vertical bars that grow from 0 height, then slide out
- * Animation: Bars grow with stagger, then slide down to reveal content
+ * Stairs Animation Component - Optimized for Performance
+ * Simple, efficient stairs animation without complex GSAP setup
  */
 const Stairs = ({ children }) => {
-  const currentPath = usePathname() // current route in Next.js
-
-  const stairParentRef = useRef(null)
+  const currentPath = usePathname()
+  const containerRef = useRef(null)
   const pageRef = useRef(null)
 
-  useGSAP(
-    () => {
-      // Set initial states
-      gsap.set(stairParentRef.current, { display: 'block' })
-      gsap.set('.stair', { height: 0, y: 0 })
-      gsap.set(pageRef.current, { opacity: 0 })
+  useEffect(() => {
+    const container = containerRef.current
+    const page = pageRef.current
+    const stairs = container?.querySelectorAll('.stair')
 
-      const tl = gsap.timeline()
+    if (!container || !page || !stairs) return
 
-      // Grow stairs from 0 height with consistent stagger
-      tl.to('.stair', {
-        height: '100%',
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power2.out"
+    // Reset all elements
+    container.style.display = 'block'
+    page.style.opacity = '0'
+    stairs.forEach(stair => {
+      stair.style.height = '0'
+      stair.style.transform = 'translateY(0)'
+    })
+
+    // Simple animation sequence
+    const animate = () => {
+      // Grow stairs
+      stairs.forEach((stair, index) => {
+        setTimeout(() => {
+          stair.style.height = '100%'
+        }, index * 50) // 50ms stagger
       })
-      // Slide stairs down to reveal content
-      tl.to('.stair', {
-        y: '100%',
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power2.inOut"
-      })
-      // Animate page content entrance
-      tl.to(pageRef.current, {
-        opacity: 1,
-        duration: 0.4,
-        ease: "power2.out"
-      }, "-=0.3")
-      // Hide stairs overlay
-      tl.to(stairParentRef.current, {
-        display: 'none',
-        duration: 0.1
-      })
-      // Reset stairs position
-      tl.set('.stair', { y: '0%' })
-    },
-    [currentPath] // re-run animation when path changes
-  )
+
+      // Slide stairs down and show page
+      setTimeout(() => {
+        stairs.forEach((stair, index) => {
+          setTimeout(() => {
+            stair.style.transform = 'translateY(100%)'
+          }, index * 30) // 30ms stagger
+        })
+        
+        // Show page
+        setTimeout(() => {
+          page.style.opacity = '1'
+          container.style.display = 'none'
+        }, 200)
+      }, 300)
+    }
+
+    // Start animation
+    const timer = setTimeout(animate, 100)
+    
+    return () => clearTimeout(timer)
+  }, [currentPath])
 
   return (
     <div>
       {/* overlay stairs */}
       <div
-        ref={stairParentRef}
+        ref={containerRef}
         className="h-screen w-full fixed z-50 top-0 left-0 bg-black"
         style={{ display: 'none' }}
       >
         <div className="h-full w-full flex">
-          <div className="stair h-0 w-1/5 bg-white"></div>
-          <div className="stair h-0 w-1/5 bg-white"></div>
-          <div className="stair h-0 w-1/5 bg-white"></div>
-          <div className="stair h-0 w-1/5 bg-white"></div>
-          <div className="stair h-0 w-1/5 bg-white"></div>
+          <div className="stair h-0 w-1/5 bg-white transition-all duration-300 ease-out"></div>
+          <div className="stair h-0 w-1/5 bg-white transition-all duration-300 ease-out"></div>
+          <div className="stair h-0 w-1/5 bg-white transition-all duration-300 ease-out"></div>
+          <div className="stair h-0 w-1/5 bg-white transition-all duration-300 ease-out"></div>
+          <div className="stair h-0 w-1/5 bg-white transition-all duration-300 ease-out"></div>
         </div>
       </div>
 
       {/* actual page content */}
-      <div ref={pageRef}>{children}</div> 
+      <div ref={pageRef} className="transition-opacity duration-500 ease-out">{children}</div> 
     </div>
   )
 }
