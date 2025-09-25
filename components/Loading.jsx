@@ -1,56 +1,73 @@
 'use client'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import { useRef } from 'react'
-import { usePathname } from 'next/navigation' // replaces useLocation
+import { useRef, useState, useEffect } from 'react'
 
 const Stairs = ({ children }) => {
-  const currentPath = usePathname() // current route in Next.js
-
   const stairParentRef = useRef(null)
   const pageRef = useRef(null)
+  const [isAnimating, setIsAnimating] = useState(true)
 
   useGSAP(
     () => {
-      const tl = gsap.timeline()
+      if (!stairParentRef.current || !pageRef.current) return
 
-      tl.to(stairParentRef.current, {
-        display: 'block',
+      // Set initial states
+      gsap.set(stairParentRef.current, { display: 'block' })
+      gsap.set(pageRef.current, { opacity: 0 })
+      gsap.set('.stair', { height: 0, y: 0 })
+
+      const tl = gsap.timeline({
+        onComplete: () => {
+          setIsAnimating(false)
+        }
       })
+
+      // Animate stairs growing from bottom
       tl.from('.stair', {
         height: 0,
+        duration: 0.6,
         stagger: {
-          amount: -0.2,
+          amount: 0.3,
+          from: 'end'
         },
+        ease: 'power2.out'
       })
-      tl.to('.stair', {
+      // Animate stairs sliding down
+      .to('.stair', {
         y: '100%',
+        duration: 0.8,
         stagger: {
-          amount: -0.25,
+          amount: 0.2,
+          from: 'start'
         },
+        ease: 'power2.inOut'
       })
-      tl.to(stairParentRef.current, {
-        display: 'none',
-      })
-      tl.to('.stair', {
-        y: '0%',
-      })
-
-      gsap.from(pageRef.current, {
+      // Hide stairs overlay
+      .to(stairParentRef.current, {
         opacity: 0,
-        delay: 1.3,
-        scale: 1.2,
+        duration: 0.3,
+        ease: 'power2.out'
       })
+      // Reveal page content
+      .to(pageRef.current, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, '-=0.2')
+
     },
-    [currentPath] // re-run animation when path changes
+    { scope: stairParentRef }
   )
 
   return (
-    <div>
+    <div className="relative">
       {/* overlay stairs */}
       <div
         ref={stairParentRef}
-        className="h-screen w-full fixed z-20 top-0"
+        className="h-screen w-full fixed z-50 top-0 left-0 bg-black"
+        style={{ display: 'none' }}
       >
         <div className="h-full w-full flex">
           <div className="stair h-full w-1/5 bg-white"></div>
@@ -62,7 +79,9 @@ const Stairs = ({ children }) => {
       </div>
 
       {/* actual page content */}
-      <div ref={pageRef}>{children}</div> 
+      <div ref={pageRef} className="relative z-10">
+        {children}
+      </div> 
     </div>
   )
 }

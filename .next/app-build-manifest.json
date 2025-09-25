@@ -13,7 +13,7 @@
       "static/chunks/117-91b3ae8090fc2906.js",
       "static/chunks/main-app-4221e5e2007e4d07.js",
       "static/css/9e8406455ae6fa5e.css",
-      "static/chunks/app/layout-8af448ee70071b4c.js"
+      "static/chunks/app/layout-c63069c7442dcb3a.js"
     ],
     "/page": [
       "static/chunks/webpack-06059ab6d706b7c8.js",
@@ -21,8 +21,8 @@
       "static/chunks/117-91b3ae8090fc2906.js",
       "static/chunks/main-app-4221e5e2007e4d07.js",
       "static/chunks/c15bf2b0-3fa3c123f635ab8d.js",
-      "static/chunks/169-4cb9578cf95df983.js",
-      "static/chunks/app/page-6546f7bdd860de3a.js"
+      "static/chunks/904-adb391a574746c64.js",
+      "static/chunks/app/page-744e8cf1d9872dae.js"
     ]
   }
 }
