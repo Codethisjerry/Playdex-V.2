@@ -1,4 +1,5 @@
 import './globals.css'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 /**
  * Root Layout Component
@@ -79,6 +80,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className="bg-black text-white antialiased">
         {children}
+        <SpeedInsights />
       </body>
     </html>
   )
