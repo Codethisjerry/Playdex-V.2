@@ -1,93 +1,70 @@
 'use client'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { useRef } from 'react'
+import { usePathname } from 'next/navigation' // replaces useLocation
 
-import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
+const Stairs = ({ children }) => {
+  const currentPath = usePathname() // current route in Next.js
 
-/**
- * Clean Geometric Preloader
- * Simple, reliable preloader with stepped geometric pattern
- * Features: Smooth animations, proper cleanup, and responsive design
- */
-const Loading = () => {
-  const containerRef = useRef(null)
-  const shapeRef = useRef(null)
-  const textRef = useRef(null)
+  const stairParentRef = useRef(null)
+  const pageRef = useRef(null)
 
-  useEffect(() => {
-    if (!containerRef.current || !shapeRef.current || !textRef.current) return
+  useGSAP(
+    () => {
+      const tl = gsap.timeline()
 
-    // Create animation timeline
-    const tl = gsap.timeline()
+      tl.to(stairParentRef.current, {
+        display: 'block',
+      })
+      tl.from('.stair', {
+        height: 0,
+        stagger: {
+          amount: -0.2,
+        },
+      })
+      tl.to('.stair', {
+        y: '100%',
+        stagger: {
+          amount: -0.25,
+        },
+      })
+      tl.to(stairParentRef.current, {
+        display: 'none',
+      })
+      tl.to('.stair', {
+        y: '0%',
+      })
 
-    // Initial state - everything hidden
-    gsap.set([shapeRef.current, textRef.current], {
-      opacity: 0,
-      scale: 0.8
-    })
-
-    // Animate shape reveal
-    tl.to(shapeRef.current, {
-      opacity: 1,
-      scale: 1,
-      duration: 0.8,
-      ease: "power2.out"
-    })
-    // Animate text reveal
-    .to(textRef.current, {
-      opacity: 1,
-      scale: 1,
-      duration: 0.6,
-      ease: "power2.out"
-    }, "-=0.4")
-    // Hold for a moment
-    .to({}, { duration: 1 })
-    // Fade out entire preloader
-    .to(containerRef.current, {
-      opacity: 0,
-      duration: 0.5,
-      ease: "power2.out",
-      onComplete: () => {
-        if (containerRef.current) {
-          containerRef.current.style.display = 'none'
-        }
-      }
-    })
-
-    // Cleanup function
-    return () => {
-      tl.kill()
-    }
-  }, [])
+      gsap.from(pageRef.current, {
+        opacity: 0,
+        delay: 1.3,
+        scale: 1.2,
+      })
+    },
+    [currentPath] // re-run animation when path changes
+  )
 
   return (
-    <div 
-      ref={containerRef}
-      className="fixed inset-0 bg-black z-50 flex items-center justify-center"
-      aria-label="Loading PlayDex"
-    >
-      {/* Geometric Shape Container */}
-      <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48">
-        {/* Stepped Geometric Shape */}
-        <div 
-          ref={shapeRef}
-          className="absolute inset-0 bg-white"
-          style={{
-            clipPath: 'polygon(0% 0%, 0% 100%, 20% 100%, 30% 80%, 40% 100%, 50% 80%, 60% 100%, 70% 80%, 80% 100%, 90% 80%, 100% 100%, 100% 0%)'
-          }}
-        />
-        
-        {/* Loading Text */}
-        <div 
-          ref={textRef}
-          className="absolute inset-0 flex items-center justify-center"
-        >
-          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-black tracking-wider">
-            Gamify Learning
-          </h1>
+    <div>
+      {/* overlay stairs */}
+      <div
+        ref={stairParentRef}
+        className="h-screen w-full fixed z-20 top-0"
+      >
+        <div className="h-full w-full flex">
+          <div className="stair h-full w-1/5 bg-white"></div>
+          <div className="stair h-full w-1/5 bg-white"></div>
+          <div className="stair h-full w-1/5 bg-white"></div>
+          <div className="stair h-full w-1/5 bg-white"></div>
+          <div className="stair h-full w-1/5 bg-white"></div>
         </div>
       </div>
+
+      {/* actual page content */}
+      <div ref={pageRef}>{children}</div> 
     </div>
   )
 }
 
-export default Loading
+export default Stairs
