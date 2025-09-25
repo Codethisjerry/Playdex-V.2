@@ -17,35 +17,45 @@ const Stairs = ({ children }) => {
 
   useGSAP(
     () => {
+      // Set initial states
+      gsap.set(stairParentRef.current, { display: 'block' })
+      gsap.set('.stair', { height: 0 })
+      gsap.set(pageRef.current, { opacity: 0, scale: 1.2 })
+
       const tl = gsap.timeline()
 
-      tl.to(stairParentRef.current, {
-        display: 'block',
-      })
-      tl.from('.stair', {
-        height: 0,
+      // Grow stairs from 0 height
+      tl.to('.stair', {
+        height: '100%',
+        duration: 0.8,
         stagger: {
           amount: -0.2,
         },
+        ease: "power2.out"
       })
+      // Slide stairs down
       tl.to('.stair', {
         y: '100%',
+        duration: 0.8,
         stagger: {
           amount: -0.25,
         },
+        ease: "power2.inOut"
       })
+      // Show page content
+      tl.to(pageRef.current, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.6,
+        ease: "power2.out"
+      }, "-=0.4")
+      // Hide stairs
       tl.to(stairParentRef.current, {
         display: 'none',
+        duration: 0.1
       })
-      tl.to('.stair', {
-        y: '0%',
-      })
-
-      gsap.from(pageRef.current, {
-        opacity: 0,
-        delay: 1.3,
-        scale: 1.2,
-      })
+      // Reset stairs
+      tl.set('.stair', { y: '0%' })
     },
     [currentPath] // re-run animation when path changes
   )
@@ -58,11 +68,11 @@ const Stairs = ({ children }) => {
         className="h-screen w-full fixed z-20 top-0"
       >
         <div className="h-full w-full flex">
-          <div className="stair h-full w-1/5 bg-white"></div>
-          <div className="stair h-full w-1/5 bg-white"></div>
-          <div className="stair h-full w-1/5 bg-white"></div>
-          <div className="stair h-full w-1/5 bg-white"></div>
-          <div className="stair h-full w-1/5 bg-white"></div>
+          <div className="stair h-0 w-1/5 bg-white"></div>
+          <div className="stair h-0 w-1/5 bg-white"></div>
+          <div className="stair h-0 w-1/5 bg-white"></div>
+          <div className="stair h-0 w-1/5 bg-white"></div>
+          <div className="stair h-0 w-1/5 bg-white"></div>
         </div>
       </div>
 
