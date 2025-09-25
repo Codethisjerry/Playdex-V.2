@@ -3,8 +3,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
 import { gsap } from 'gsap'
 import { Star, Zap, Trophy, Target } from 'lucide-react'
-import GlassCard from './UI/GlassCard'
-import Leaderboard from './UI/Leaderboard'
+// Removed unused imports - using inline components instead
 import CountUp from './CountUp'
 
 /**
@@ -119,10 +118,10 @@ const Gamification = () => {
           {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-6">
             {stats.map((stat, index) => (
-              <GlassCard
+              <div
                 key={index}
                 ref={(el) => (statsRef.current[index] = el)}
-                className="p-6 text-center hover:scale-103 hover:shadow-neon-sm hover:border-white/30 transition-all duration-300"
+                className="glass-card p-6 text-center hover:scale-103 hover:shadow-neon-sm hover:border-white/30 transition-all duration-300"
                 style={{ 
                   transformStyle: 'preserve-3d',
                   willChange: 'transform, box-shadow',
@@ -150,13 +149,32 @@ const Gamification = () => {
                 <div className="text-sm text-gray-300">
                   {stat.label}
                 </div>
-              </GlassCard>
+              </div>
             ))}
           </div>
 
           {/* Leaderboard Section */}
-          <div>
-            <Leaderboard />
+          <div className="glass-card p-8">
+            <h3 className="text-2xl font-bold text-white mb-6 text-center">Leaderboard</h3>
+            <div className="space-y-4">
+              {[
+                { name: 'Siddharth', score: 2840, rank: 1 },
+                { name: 'Vaibhav', score: 2650, rank: 2 },
+                { name: 'Vishnu', score: 2400, rank: 3 },
+                { name: 'Angel', score: 2200, rank: 4 },
+                { name: 'Luffy', score: 2000, rank: 5 }
+              ].map((player, index) => (
+                <div key={index} className="flex items-center justify-between p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors duration-200">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-black font-bold text-sm">
+                      {player.rank}
+                    </div>
+                    <span className="text-white font-medium">{player.name}</span>
+                  </div>
+                  <span className="text-white font-bold">{player.score.toLocaleString()} XP</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
