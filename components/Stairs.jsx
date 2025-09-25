@@ -1,82 +1,73 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { usePathname } from 'next/navigation'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { useRef } from 'react'
+import { usePathname } from 'next/navigation' // replaces useLocation
 
 /**
- * Stairs Animation Component - Optimized for Performance
- * Simple, efficient stairs animation without complex GSAP setup
+ * Stairs Animation Component - Exact Match to Original
+ * Uses the exact same structure and animation logic as the provided code
  */
 const Stairs = ({ children }) => {
-  const currentPath = usePathname()
-  const containerRef = useRef(null)
+  const currentPath = usePathname() // current route in Next.js
+
+  const stairParentRef = useRef(null)
   const pageRef = useRef(null)
 
-  useEffect(() => {
-    const container = containerRef.current
-    const page = pageRef.current
-    const stairs = container?.querySelectorAll('.stair')
+  useGSAP(
+    () => {
+      const tl = gsap.timeline()
 
-    if (!container || !page || !stairs) return
-
-    // Reset all elements
-    container.style.display = 'block'
-    page.style.opacity = '0'
-    stairs.forEach(stair => {
-      stair.style.height = '0'
-      stair.style.transform = 'translateY(0)'
-    })
-
-    // Simple animation sequence
-    const animate = () => {
-      // Grow stairs
-      stairs.forEach((stair, index) => {
-        setTimeout(() => {
-          stair.style.height = '100%'
-        }, index * 50) // 50ms stagger
+      tl.to(stairParentRef.current, {
+        display: 'block',
+      })
+      tl.from('.stair', {
+        height: 0,
+        stagger: {
+          amount: -0.2,
+        },
+      })
+      tl.to('.stair', {
+        y: '100%',
+        stagger: {
+          amount: -0.25,
+        },
+      })
+      tl.to(stairParentRef.current, {
+        display: 'none',
+      })
+      tl.to('.stair', {
+        y: '0%',
       })
 
-      // Slide stairs down and show page
-      setTimeout(() => {
-        stairs.forEach((stair, index) => {
-          setTimeout(() => {
-            stair.style.transform = 'translateY(100%)'
-          }, index * 30) // 30ms stagger
-        })
-        
-        // Show page
-        setTimeout(() => {
-          page.style.opacity = '1'
-          container.style.display = 'none'
-        }, 200)
-      }, 300)
-    }
-
-    // Start animation
-    const timer = setTimeout(animate, 100)
-    
-    return () => clearTimeout(timer)
-  }, [currentPath])
+      gsap.from(pageRef.current, {
+        opacity: 0,
+        delay: 1.3,
+        scale: 1.2,
+      })
+    },
+    [currentPath] // re-run animation when path changes
+  )
 
   return (
     <div>
       {/* overlay stairs */}
       <div
-        ref={containerRef}
-        className="h-screen w-full fixed z-50 top-0 left-0 bg-black"
-        style={{ display: 'none' }}
+        ref={stairParentRef}
+        className="h-screen w-full fixed z-20 top-0"
       >
         <div className="h-full w-full flex">
-          <div className="stair h-0 w-1/5 bg-white transition-all duration-300 ease-out"></div>
-          <div className="stair h-0 w-1/5 bg-white transition-all duration-300 ease-out"></div>
-          <div className="stair h-0 w-1/5 bg-white transition-all duration-300 ease-out"></div>
-          <div className="stair h-0 w-1/5 bg-white transition-all duration-300 ease-out"></div>
-          <div className="stair h-0 w-1/5 bg-white transition-all duration-300 ease-out"></div>
+          <div className="stair h-full w-1/5 bg-white"></div>
+          <div className="stair h-full w-1/5 bg-white"></div>
+          <div className="stair h-full w-1/5 bg-white"></div>
+          <div className="stair h-full w-1/5 bg-white"></div>
+          <div className="stair h-full w-1/5 bg-white"></div>
         </div>
       </div>
 
       {/* actual page content */}
-      <div ref={pageRef} className="transition-opacity duration-500 ease-out">{children}</div> 
+      <div ref={pageRef}>{children}</div> 
     </div>
   )
 }
