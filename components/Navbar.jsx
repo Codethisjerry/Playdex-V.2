@@ -12,7 +12,7 @@ import {
   MobileNavHeader, 
   MobileNavMenu, 
   MobileNavToggle
-} from './ui/resizable-navbar'
+} from './UI/resizable-navbar'
 
 /**
  * Navigation Bar Component

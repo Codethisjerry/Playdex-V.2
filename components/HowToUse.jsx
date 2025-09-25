@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import { InfiniteMovingCards } from './ui/infinite-moving-cards'
+import { InfiniteMovingCards } from './UI/infinite-moving-cards'
 import { 
   PlusCircle, 
   Play, 

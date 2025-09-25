@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useCallback } from 'react'
 import { gsap } from 'gsap'
-import { Spotlight } from './ui/spotlight-new'
-import { LayoutTextFlip } from './ui/layout-text-flip'
-import { BackgroundLines } from './ui/background-lines'
-import { HoverBorderGradient } from './ui/hover-border-gradient'
+import { Spotlight } from './UI/spotlight-new'
+import { LayoutTextFlip } from './UI/layout-text-flip'
+import { BackgroundLines } from './UI/background-lines'
+import { HoverBorderGradient } from './UI/hover-border-gradient'
 
 /**
  * Hero Section Component

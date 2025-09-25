@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useCallback } from 'react'
 import { gsap } from 'gsap'
-import { AnimatedTooltip } from './ui/animated-tooltip'
-import { GlowingEffect } from './ui/glowing-effect'
-import { TextGenerateEffect } from './ui/text-generate-effect'
+import { AnimatedTooltip } from './UI/animated-tooltip'
+import { GlowingEffect } from './UI/glowing-effect'
+import { TextGenerateEffect } from './UI/text-generate-effect'
 import { 
   PlusCircle, 
   Wrench, 
